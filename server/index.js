@@ -54,3 +54,39 @@ app.listen(port, host, async err => {
     logger.appStarted(port, prettyHost);
   }
 });
+
+// My things - start
+const server = require('http').createServer(app);
+const socketIo = require('socket.io');
+const io = socketIo(server);
+const websocketPort = '3001';
+server.listen(websocketPort, () =>
+  console.log(`Listening on port ${websocketPort}`),
+);
+
+const users = [];
+const serverUsers = [];
+const chatLogs = [];
+io.on('connection', socket => {
+  console.log('New client connected');
+
+  socket.on('SEND_USER_TO_SERVER', user => {
+    serverUsers.push({ socketId: socket.id, user });
+    users.push(user);
+    socket.broadcast.emit('NEW_USER_TO_CLIENTS', user);
+  });
+
+  socket.on('SEND_MESSAGE_TO_SERVER', message => {
+    chatLogs.push(message);
+    socket.broadcast.emit('NEW_MESSAGE_TO_CLIENTS', message);
+  });
+
+  socket.on('GET_DATA_FROM_SERVER', () => {
+    socket.emit('DATA_TO_CLIENT', chatLogs);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
+// My things - end

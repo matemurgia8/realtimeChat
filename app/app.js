@@ -14,10 +14,8 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import history from 'utils/history';
-import 'sanitize.css/sanitize.css';
 
-// Import root app
-import App from 'containers/App';
+import 'sanitize.css/sanitize.css';
 
 // Import Language Provider
 import LanguageProvider from 'containers/LanguageProvider';
@@ -28,14 +26,14 @@ import '!file-loader?name=[name].[ext]!./images/favicon.ico';
 import 'file-loader?name=.htaccess!./.htaccess';
 /* eslint-enable import/no-unresolved, import/extensions */
 
-import configureStore from './configureStore';
+// Import root app
+import App from 'containers/App';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
 
-// Create redux store with history
-const initialState = {};
-const store = configureStore(initialState, history);
+import { store } from './configs';
+
 const MOUNT_NODE = document.getElementById('app');
 
 const render = messages => {
